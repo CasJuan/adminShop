@@ -4,7 +4,7 @@
   >
     <a href="#">
       <div class="relative flex items-end overflow-hidden rounded-xl">
-        <img :src="product.image[0]" :alt="product.title" />
+        <img :src="product.image[0]" :alt="product.title" class="h-[250px] object-cover" />
       </div>
 
       <div class="mt-1 p-2">
