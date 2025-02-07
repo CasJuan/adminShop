@@ -1,3 +1,4 @@
+import { getProducts, getProductsAction } from '../../products/actions/get-products';
 <template>
   <!-- Title -->
   <div class="pt-32 bg-white">
@@ -589,7 +590,6 @@
 </template>
 
 <script setup lang="ts">
-import { tesloApi } from '../../../api/tesloApi';
-
-tesloApi;
+import { getProductsAction } from '../../products/actions';
+getProductsAction();
 </script>
