@@ -587,9 +587,17 @@ import { getProducts, getProductsAction } from '../../products/actions/get-produ
       </article>
     </div>
   </section>
+
+  <div>loading: {{ isLoading }}</div>
+  <div>{{ products }}</div>
 </template>
 
 <script setup lang="ts">
-import { getProductsAction } from '../../products/actions';
-getProductsAction();
+import { getProductsAction } from '../../products/actions/index';
+import { useQuery } from '@tanstack/vue-query';
+
+const { data: products, isLoading } = useQuery({
+  queryKey: ['products', { page: 1 }],
+  queryFn: () => getProductsAction(),
+});
 </script>
