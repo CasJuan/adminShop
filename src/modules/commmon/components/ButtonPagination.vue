@@ -20,12 +20,12 @@
 </template>
 
 <script lang="ts">
-import ArrowRightIcon from '../../../Icons/ArrowRightIcon.vue;
-import ArrowLeftIcon from '../../../Icons/ArrowLeftIcon.vue;
+import ArrowRightIcon from '../../../Icons/ArrowRightIcon.vue';
+import ArrowLeftIcon from '../../../Icons/ArrowLeftIcon.vue';
 
-interface Props{
-    page:number;
-    hasMoreData:boolean;
+interface Props {
+  page: number;
+  hasMoreData: boolean;
 }
 
 defineProps<Props>();
