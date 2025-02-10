@@ -1,8 +1,8 @@
+import { User } from './../interfaces/user.interfaces';
 import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
-import { AuthStatus, User } from '../interfaces';
 import { loginAction } from '../actions/login.action';
-import { templateRef, useLocalStorage } from '@vueuse/core';
+import { useLocalStorage } from '@vueuse/core';
 import { checkAuthAction, registerAction } from '../actions';
 import { validateLocaleAndSetLanguage } from 'typescript';
 
