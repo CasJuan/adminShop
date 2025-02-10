@@ -9,19 +9,12 @@
       <!-- Primera parte del formulario -->
       <div class="mb-4">
         <label for="title" class="form-label">Título</label>
-        <input
-          v-model="title"
-          v-bind="titleAttrs"
-          type="text"
-          id="title"
-          :class="['form-control', { 'border-red-500': errors.title }]"
-        />
-        <span class="text-red-400" v-if="errors.title">{{ errors.title }}</span>
+        <custom-input v-model="title" v-bind="titleAttrs" :error="errors.title" />
       </div>
 
       <div class="mb-4">
         <label for="slug" class="form-label">Slug</label>
-        <input type="text" id="slug" class="form-control" />
+        <custom-input v-model="slug" v-bind="slugAttrs" :error="errors.slug" />
       </div>
 
       <div class="mb-4">
@@ -35,12 +28,12 @@
       <div class="flex flex-row gap-3">
         <div class="mb-4">
           <label for="price" class="form-label">Precio</label>
-          <input type="number" id="price" class="form-control" />
+          <custom-input v-model.number="price" v-bind="priceAttrs" :error="errors.price" />
         </div>
 
         <div class="mb-4">
           <label for="stock" class="form-label">Inventario</label>
-          <input type="number" id="stock" class="form-control" />
+          <custom-input v-model.number="stock" v-bind="stockAttrs" :error="errors.stock" />
         </div>
       </div>
 

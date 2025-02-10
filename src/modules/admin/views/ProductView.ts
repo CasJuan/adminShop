@@ -4,6 +4,7 @@ import { defineComponent, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
 import { useForm } from 'vee-validate';
 import * as yup from 'yup';
+import CustomInput from '@/modules/commmon/components/CustomInput.vue';
 
 const validationSchema = yup.object({
   title: yup.string().required().min(3),
@@ -15,6 +16,9 @@ const validationSchema = yup.object({
 });
 
 export default defineComponent({
+  components: {
+    CustomInput,
+  },
   props: {
     productId: {
       type: String,
