@@ -2,10 +2,9 @@ import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
 import { AuthStatus, User } from '../interfaces';
 import { loginAction } from '../actions/login.action';
-import { useLocalStorage } from '@vueuse/core';
-import { registerAction } from '../actions';
+import { templateRef, useLocalStorage } from '@vueuse/core';
+import { checkAuthAction, registerAction } from '../actions';
 import { validateLocaleAndSetLanguage } from 'typescript';
-import { AuthStatus } from '../interfaces/auth-status.enum';
 
 export const useAuthStore = defineStore('auth', () => {
   const authStatus = ref<AuthStatus>(AuthStatus.Cheking);
@@ -55,6 +54,25 @@ export const useAuthStore = defineStore('auth', () => {
     user.value = undefined;
     token.value = '';
     return false;
+  };
+
+  const checkAuthStatus = async (): Promise<boolean> => {
+    try {
+      const statusResp = await checkAuthAction();
+
+      if (!statusResp) {
+        logout();
+        return false;
+      }
+
+      authStatus.value = AuthStatus.Authenticated;
+      user.value = statusResp.user;
+      token.value = statusResp.token;
+      return true;
+    } catch (error) {
+      logout();
+      return false;
+    }
   };
 
   return {
