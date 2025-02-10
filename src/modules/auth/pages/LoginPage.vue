@@ -1,10 +1,11 @@
 <template>
   <h1 class="text-2xl font-semibold mb-4">Login</h1>
-  <form action="#" method="POST">
+  <form @submit.prevent="onLogin">
     <!-- Username Input -->
     <div class="mb-4">
-      <label for="username" class="block text-gray-600">Username</label>
+      <label for="username" class="block text-gray-600">Correo</label>
       <input
+        v-model="myForm.email"
         type="text"
         id="username"
         name="username"
@@ -14,8 +15,9 @@
     </div>
     <!-- Password Input -->
     <div class="mb-4">
-      <label for="password" class="block text-gray-600">Password</label>
+      <label for="password" class="block text-gray-600">Contraseña</label>
       <input
+        v-model="myForm.password"
         type="password"
         id="password"
         name="password"
@@ -25,17 +27,22 @@
     </div>
     <!-- Remember Me Checkbox -->
     <div class="mb-4 flex items-center">
-      <input type="checkbox" id="remember" name="remember" class="text-blue-500" />
-      <label for="remember" class="text-gray-600 ml-2">Remember Me</label>
+      <input
+        v-model="myForm.rememberMe"
+        type="checkbox"
+        id="remember"
+        name="remember"
+        class="text-blue-500"
+      />
+      <label for="remember" class="text-gray-600 ml-2">Recordar Usuario</label>
     </div>
     <!-- Forgot Password Link -->
     <div class="mb-6 text-blue-500">
-      <a href="#" class="hover:underline">Forgot Password?</a>
+      <a href="#" class="hover:underline">Olvidaste la contraseña?</a>
     </div>
     <!-- Login Button -->
     <button
-      @click="onLogin"
-      type="button"
+      type="submit"
       class="bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-md py-2 px-4 w-full"
     >
       Login
@@ -48,18 +55,20 @@
 </template>
 
 <script lang="ts" setup>
+import { reactive } from 'vue';
 import { useRouter } from 'vue-router';
+import { useAuthStore } from '../store/auth.store';
 
 const router = useRouter();
+const authStore = useAuthStore();
 
-const onLogin = () => {
-  localStorage.setItem('userId', 'ABC-123');
+const myForm = reactive({
+  email: '',
+  password: '',
+  rememberMe: false,
+});
 
-  const lastPath = localStorage.getItem('lastPath') ?? '/';
-
-  // router.replace({
-  //   // name: 'home',
-  // });
-  router.replace(lastPath);
+const onLogin = async () => {
+  const ok = await authStore.login(myForm.email, myForm.password);
 };
 </script>
