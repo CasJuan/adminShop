@@ -1,7 +1,7 @@
 import { ValueOf } from './../../../../node_modules/vee-validate/node_modules/type-fest/source/value-of.d';
 import { getProductById } from '@/modules/products/actions';
 import { useQuery } from '@tanstack/vue-query';
-import { defineComponent, watchEffect } from 'vue';
+import { defineComponent, watch, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
 import { useForm } from 'vee-validate';
 import * as yup from 'yup';
@@ -41,7 +41,7 @@ export default defineComponent({
       retry: false,
     });
 
-    const { values, defineField, errors, handleSubmit } = useForm({
+    const { values, defineField, errors, handleSubmit, resetForm } = useForm({
       validationSchema,
       initialValues: product.value,
     });
@@ -77,6 +77,21 @@ export default defineComponent({
         return;
       }
     });
+
+    watch(
+      product,
+      () => {
+        if (!product) return;
+
+        resetForm({
+          values: product.value,
+        });
+      },
+      {
+        deep: true,
+        immediate: true,
+      },
+    );
 
     return {
       //Prperties

@@ -94,12 +94,12 @@
   </form>
 
   <div class="grid grid-cols-2 mt-2">
-    <div class="bg-blue-200 p-2">
-      {{ values }}
-    </div>
-    <div class="bg-red-300 p-2">
-      {{ errors }}
-    </div>
+    <pre class="bg-blue-200 p-2">
+      {{ JSON.stringify(values, null, 2) }}
+    </pre>
+    <pre class="bg-red-300 p-2">
+      {{ JSON.stringify(errors, null, 2) }}
+    </pre>
   </div>
 </template>
 
