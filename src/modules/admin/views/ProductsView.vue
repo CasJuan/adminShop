@@ -45,18 +45,18 @@
         </table>
       </div>
     </div>
+    <ButtonPagination :page="page" , :has-more-data="!!products && products.length < 10" />
   </div>
 </template>
 
 <script lang="ts" setup>
+import ButtonPagination from '@/modules/commmon/components/ButtonPagination.vue';
+import { usePagination } from '@/modules/commmon/composables/usePagination';
 import { useQuery, useQueryClient } from '@tanstack/vue-query';
-import { ref, watch } from 'vue';
-import { useRouter } from 'vue-router';
-import { Size } from '../../products/interfaces/product.interfaces';
+import { watchEffect } from 'vue';
 
-const route = useRouter();
-const page = ref(Number(route.query.page || 1));
 const queryCliente = useQueryClient();
+const { page } = usePagination();
 
 console.log({ page });
 
@@ -64,15 +64,6 @@ const { data: products = [] } = useQuery({
   queryKey: ['products', { page: page }],
   queryFn: () => getProductsAction(page.value),
 });
-
-watch(
-  () => route.query.page,
-  (newPage) => {
-    page.value = Number(newPage || 1);
-
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  },
-);
 
 watchEffect(() => {
   queryCliente.prefetchQuery({
