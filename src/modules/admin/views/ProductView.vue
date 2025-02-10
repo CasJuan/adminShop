@@ -44,6 +44,7 @@
           <button
             v-for="size of allSizes"
             :key="size"
+            @click="toggleSize(size)"
             type="button"
             class="bg-blue-100 p-2 rounded w-14 mr-2 flex-1"
           >
@@ -58,12 +59,8 @@
       <label for="stock" class="form-label">Imágenes</label>
       <!-- Row with scrollable horizontal -->
       <div class="flex p-2 overflow-x-auto space-x-8 w-full h-[265px] bg-gray-200 rounded">
-        <div class="flex-shrink-0">
-          <img src="https://via.placeholder.com/250" alt="imagen" class="w-[250px] h-[250px]" />
-        </div>
-
-        <div class="flex-shrink-0">
-          <img src="https://via.placeholder.com/250" alt="imagen" class="w-[250px] h-[250px]" />
+        <div v-for="image of images" :key="image" class="flex-shrink-0">
+          <img :src="image.value" :alt="title" class="w-[250px] h-[250px] rounded" />
         </div>
       </div>
       <!-- Upload image -->
@@ -75,12 +72,13 @@
 
       <div class="mb-4">
         <label for="stock" class="form-label">Género</label>
-        <select class="form-control">
+        <select v-model="gender" v-bind="genderAttrs" class="form-control">
           <option value="">Seleccione</option>
           <option value="kid">Niño</option>
           <option value="women">Mujer</option>
           <option value="men">Hombre</option>
         </select>
+        <span class="text-red-400" v-if="errors.gender">{{ errors.gender }}</span>
       </div>
 
       <!-- Botón para guardar -->

@@ -1,3 +1,4 @@
+import { ValueOf } from './../../../../node_modules/vee-validate/node_modules/type-fest/source/value-of.d';
 import { getProductById } from '@/modules/products/actions';
 import { useQuery } from '@tanstack/vue-query';
 import { defineComponent, watchEffect } from 'vue';
@@ -42,6 +43,7 @@ export default defineComponent({
 
     const { values, defineField, errors, handleSubmit } = useForm({
       validationSchema,
+      initialValues: product.value,
     });
 
     const [title, titleAttrs] = defineField('title');
@@ -51,9 +53,23 @@ export default defineComponent({
     const [stock, stockAttrs] = defineField('stock');
     const [gender, genderAttrs] = defineField('gender');
 
+    const { fields: sizes, remove: removeSize, push: pushSize } = useFilefArray<string>('sizes');
+    const { fields: images } = useFilefArray<string>('images');
+
     const onSubmit = handleSubmit((value) => {
       console.log(value);
     });
+
+    const toggleSize = (size: string) => {
+      const currentSizes = sizes.value.map((s) => s.value);
+      const hasSize = currentSizes.includes(size);
+
+      if (hasSize) {
+        removeSize(currentSizes.indexOf(size));
+      } else {
+        pushSize(size);
+      }
+    };
 
     watchEffect(() => {
       if (isError.value && !isLoading.value) {
@@ -78,12 +94,15 @@ export default defineComponent({
       stockAttrs,
       gender,
       genderAttrs,
+      images,
+      sizes,
 
       //Getters
       allSizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
 
       //Actions
       onSubmit,
+      toggleSize,
     };
   },
 });
