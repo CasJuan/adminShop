@@ -3,6 +3,22 @@ import type { Product } from '../interfaces/product.interfaces';
 import { getProductImageAction } from './get-product-immamge.action';
 
 export const getProductById = async (productId: string) => {
+  if (productId === 'create') {
+    return {
+      id: '',
+      title: '',
+      slug: '',
+      description: '',
+      price: 0,
+      stock: 0,
+      image: [],
+      tags: [],
+      sizes: [],
+      gender: '' as any,
+      user: {} as any,
+    };
+  }
+
   try {
     const { data } = await tesloApi.get<Product>(`/products/${productId}`);
     return {
