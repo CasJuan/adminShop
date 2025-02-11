@@ -70,7 +70,12 @@ export default defineComponent({
     const imageFiles = ref<File[]>([]);
 
     const onSubmit = handleSubmit((values) => {
-      mutate(values);
+      const formvalues = {
+        ...values,
+        images: [...values.images, ...imageFiles.value],
+      };
+
+      mutate(formvalues);
     });
 
     const toggleSize = (size: string) => {
@@ -126,6 +131,7 @@ export default defineComponent({
       resetForm({
         values: updatedProduct.value,
       });
+      imageFiles.value = [];
     });
 
     watch(
@@ -153,7 +159,7 @@ export default defineComponent({
       stockAttrs,
       gender,
       genderAttrs,
-      imageFile,
+      imageFiles,
 
       sizes,
       images,
