@@ -1,8 +1,9 @@
 import { tesloApi } from '@/api/tesloApi';
 import type { Product } from '../interfaces/product.interfaces';
 
-export const createUpdateProduct = async (product: Partial<Product>) => {
+export const createUpdateProductAction = async (product: Partial<Product>) => {
   if (product.id && product.id !== '') {
+    // Update product
     return await updateProduct(product);
   }
 

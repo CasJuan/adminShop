@@ -1,15 +1,15 @@
-import { ValueOf } from './../../../../node_modules/vee-validate/node_modules/type-fest/source/value-of.d';
-import { getProductById } from '@/modules/products/actions';
-import { useQuery } from '@tanstack/vue-query';
+import { createUpdateProductAction, getProductById } from '@/modules/products/actions';
+import { useMutation, useQuery } from '@tanstack/vue-query';
 import { defineComponent, watch, watchEffect } from 'vue';
 import { useRouter } from 'vue-router';
-import { useForm } from 'vee-validate';
+import { useFieldArray, useForm } from 'vee-validate';
 import * as yup from 'yup';
 import CustomInput from '@/modules/commmon/components/CustomInput.vue';
 import CustomTextarea from '@/modules/commmon/components/CustomTextarea.vue';
+import { useToast } from 'vue-toastification';
 
 const validationSchema = yup.object({
-  title: yup.string().required().min(3),
+  title: yup.string().required('Este campo es super importante').min(3, 'Mínimo de 3 letras!!!'),
   slug: yup.string().required(),
   description: yup.string().required(),
   price: yup.number().required(),
@@ -25,11 +25,12 @@ export default defineComponent({
   props: {
     productId: {
       type: String,
-      requeride: true,
+      required: true,
     },
   },
-  setup() {
+  setup(props) {
     const router = useRouter();
+    const toast = useToast();
 
     const {
       data: product,
@@ -41,8 +42,18 @@ export default defineComponent({
       retry: false,
     });
 
+    const {
+      mutate,
+      isPending,
+      isSuccess: isUpdatesuccess,
+      data: updatedProduct,
+    } = useMutation({
+      mutationFn: createUpdateProductAction,
+    });
+
     const { values, defineField, errors, handleSubmit, resetForm, meta } = useForm({
       validationSchema,
+      // initialValues: product.value,
     });
 
     const [title, titleAttrs] = defineField('title');
@@ -52,11 +63,11 @@ export default defineComponent({
     const [stock, stockAttrs] = defineField('stock');
     const [gender, genderAttrs] = defineField('gender');
 
-    const { fields: sizes, remove: removeSize, push: pushSize } = useFilefArray<string>('sizes');
-    const { fields: images } = useFilefArray<string>('images');
+    const { fields: sizes, remove: removeSize, push: pushSize } = useFieldArray<string>('sizes');
+    const { fields: images } = useFieldArray<string>('images');
 
-    const onSubmit = handleSubmit((value) => {
-      console.log(value);
+    const onSubmit = handleSubmit((values) => {
+      mutate(values);
     });
 
     const toggleSize = (size: string) => {
@@ -92,10 +103,23 @@ export default defineComponent({
       },
     );
 
+    watch(isUpdatesuccess, (value) => {
+      if (!value) return;
+      toast.success('Producto actualizado correctamente');
+
+      //Todo: redireccion cuand se crea
+
+      resetForm({
+        values: updatedProduct.value,
+      });
+    });
+
     return {
-      //Prperties
-      errors,
+      // Properties
       values,
+      errors,
+      meta,
+
       title,
       titleAttrs,
       slug,
@@ -108,14 +132,16 @@ export default defineComponent({
       stockAttrs,
       gender,
       genderAttrs,
-      images,
-      sizes,
-      meta,
 
-      //Getters
+      sizes,
+      images,
+
+      isPending,
+
+      // Getters
       allSizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'],
 
-      //Actions
+      // Actions
       onSubmit,
       toggleSize,
 
