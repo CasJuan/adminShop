@@ -105,14 +105,12 @@ import ProductList from '../../products/components/ProductList.vue';
 import ButtonPagination from '../../commmon/components/ButtonPagination.vue';
 import { getProductsAction } from '../../products/actions/index';
 import { useQuery, useQueryClient } from '@tanstack/vue-query';
-import { useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import { ref, watch, watchEffect } from 'vue';
 
-const route = useRouter();
+const route = useRoute();
 const page = ref(Number(route.query.page || 1));
-const queryCliente = useQueryClient();
-
-console.log({ page });
+const queryClient = useQueryClient();
 
 const { data: products = [] } = useQuery({
   queryKey: ['products', { page: page }],
@@ -129,9 +127,9 @@ watch(
 );
 
 watchEffect(() => {
-  queryCliente.prefetchQuery({
+  queryClient.prefetchQuery({
     queryKey: ['products', { page: page.value + 1 }],
-    queryFn: () => getProductsAction(page.value),
+    queryFn: () => getProductsAction(page.value + 1),
   });
 });
 </script>

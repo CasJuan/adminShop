@@ -19,7 +19,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import ArrowRightIcon from '../../../Icons/ArrowRightIcon.vue';
 import ArrowLeftIcon from '../../../Icons/ArrowLeftIcon.vue';
 

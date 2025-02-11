@@ -40,8 +40,8 @@
   </article>
 </template>
 
-<script lang="ts">
-import { Product } from '../actions/interfaces/product.interfaces';
+<script lang="ts" setup>
+import type { Product } from '../interfaces/product.interfaces';
 
 interface Props {
   product: Product;

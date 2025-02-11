@@ -1,10 +1,8 @@
-import { User } from './../interfaces/user.interfaces';
 import { ref, computed } from 'vue';
 import { defineStore } from 'pinia';
-import { loginAction } from '../actions/login.action';
+import { AuthStatus, type User } from '../interfaces';
+import { checkAuthAction, loginAction, registerAction } from '../actions';
 import { useLocalStorage } from '@vueuse/core';
-import { checkAuthAction, registerAction } from '../actions';
-import { validateLocaleAndSetLanguage } from 'typescript';
 
 export const useAuthStore = defineStore('auth', () => {
   const authStatus = ref<AuthStatus>(AuthStatus.Cheking);
@@ -22,6 +20,7 @@ export const useAuthStore = defineStore('auth', () => {
       user.value = loginResp.user;
       token.value = loginResp.token;
       authStatus.value = AuthStatus.Authenticated;
+
       return true;
     } catch (error) {
       console.log(error);
@@ -45,7 +44,7 @@ export const useAuthStore = defineStore('auth', () => {
       return { ok: true, message: '' };
     } catch (error) {
       console.log(error);
-      return { ok: false, message: 'Error' };
+      return { ok: false, message: 'Error al registrar el usuario' };
     }
   };
 
@@ -60,7 +59,7 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       const statusResp = await checkAuthAction();
 
-      if (!statusResp) {
+      if (!statusResp.ok) {
         logout();
         return false;
       }
@@ -70,6 +69,7 @@ export const useAuthStore = defineStore('auth', () => {
       token.value = statusResp.token;
       return true;
     } catch (error) {
+      console.log(error);
       logout();
       return false;
     }
@@ -79,18 +79,17 @@ export const useAuthStore = defineStore('auth', () => {
     user,
     token,
     authStatus,
-    //Getters
-    isCheking: computed(() => authStatus.value === AuthStatus.Cheking),
+
+    // Getters
+    isChecking: computed(() => authStatus.value === AuthStatus.Cheking),
     isAuthenticated: computed(() => authStatus.value === AuthStatus.Authenticated),
-
-    //TODO: getter para saber si es Admin o no
-
-    idAdmin: computed(() => user.value?.roles.includes('admin') ?? false),
+    isAdmin: computed(() => user.value?.roles.includes('admin') ?? false),
     username: computed(() => user.value?.fullName),
 
-    //Actions
+    // Actions
     login,
-    register,
     logout,
+    register,
+    checkAuthStatus,
   };
 });

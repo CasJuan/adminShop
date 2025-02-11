@@ -10,7 +10,7 @@ export const getProductsAction = async (page: number = 1, limit: number = 10) =>
 
     return data.map((product) => ({
       ...product,
-      image: product.images.map(getProductImageAction),
+      images: product.images.map(getProductImageAction),
     }));
   } catch (error) {
     console.log(error);
